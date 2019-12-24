@@ -1,0 +1,17 @@
+cffi==1.13.2
+Click==7.0
+Flask==1.1.1
+Flask-SocketIO==4.2.1
+Flask-Sockets==0.2.1
+gevent==1.4.0
+gevent-websocket==0.10.1
+greenlet==0.4.15
+gunicorn==20.0.4
+itsdangerous==1.1.0
+Jinja2==2.10.3
+MarkupSafe==1.1.1
+pycparser==2.19
+python-engineio==3.11.1
+python-socketio==4.4.0
+six==1.13.0
+Werkzeug==0.16.0

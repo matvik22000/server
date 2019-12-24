@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script type="text/javascript" src="static/js/reconnecting-websocket.min.js"></script>
+</head>
+<body>
+<label for="i1"></label><input id="i1">
+<button id="b1">send</button>
+<script>
+    function onclick() {
+        var text = document.getElementById("i1").innerText;
+        document.getElementById("i1").innerHTML = "";
+        inbox.send(text)
+
+    }
+
+    if (window.location.protocol == "https:") {
+        var ws_scheme = "ws://";
+    } else {
+        var ws_scheme = "ws://"
+    }
+
+    var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/test");
+
+</script>
+</body>
+</html>
