@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>uploading</title> </head>
+    <script type="text/javascript" src="static/js/minajax.js"></script>
+<body>
+    <input type='file' id='i1'>
+    <button onclick="function c(){
+        let file = document.getElementById('i1').files[0];
+        let data = new FormData();
+        data.append('file', file);
+        alert('uploading')
+        fetch('/upload', {method: 'POST', body: data});
+        
+    } c()">send</button>
+</body>
+</html>

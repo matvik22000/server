@@ -2,28 +2,152 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>test</title>
+    <title>local chat</title>
     <script type="text/javascript" src="static/js/reconnecting-websocket.min.js"></script>
+    <script type="text/javascript" src="static/js/minajax.js"></script>
+    <link rel="stylesheet" href="static/css/w3.css">
+    <style>
+        .input {
+            position: fixed;
+            bottom: 5px;
+            font-size: 23px;
+            width: 70%;
+        }
+
+        @keyframes slidein {
+            from {
+                margin-left: 100%;
+            }
+
+            to {
+                margin-left: 16px;
+            }
+        }
+
+        .btn {
+            position: fixed;
+            bottom: 5px;
+            right: 5%;
+            width: 15%;
+        }
+
+        .parent {
+            animation-name: slidein;
+            animation-duration: 0.5s;
+            width: 90%;
+            word-wrap: break-word;
+        }
+
+        .box {
+            width: 100%;
+            position: absolute;
+            overflow-x: hidden;
+            overflow-y: auto;
+            max-height: 90%;
+
+        }
+
+        .name_btn {
+            top: 5px;
+            right: 5px;
+            position: fixed;
+
+        }
+
+        .user_count {
+            position: fixed;
+            bottom: 7%;
+            margin-left: 5px;
+
+        }
+
+        @media screen and (max-width: 480px) {
+            .input {
+                font-size: 100px;
+            }
+        }
+
+    </style>
 </head>
 <body>
-<label for="i1"></label><input id="i1">
-<button id="b1">send</button>
+<div class="box"></div>
+<label for="i1" class="input"></label><input id="i1" class="w3-input w3-border input" placeholder="сообщение">
+<button id="b1" class="btn w3-button w3-black " onclick="function c() {
+    const name = localStorage.getItem('name');
+    const text = document.getElementById('i1').value;
+    document.getElementById('i1').value = '';
+    const data = {
+        name: name,
+        text: text
+    };
+    socket.send(JSON.stringify(data));
+}
+c(); ">send
+</button>
+<button class="w3-button w3-margin w3-black name_btn" onclick="function f() {
+  var a = prompt('enter name');
+  if(a.length > 40){
+      a = 'клоун, делающий ник больше 40 символов';
+  }
+  localStorage.setItem('name', a)
+}
+f() ">name
+</button>
+<div class="w3-container w3-border w3-round w3-light-gray user_count">zagruska</div>
 <script>
-    function onclick() {
-        var text = document.getElementById("i1").innerText;
-        document.getElementById("i1").innerHTML = "";
-        inbox.send(text)
+    const socket = new ReconnectingWebSocket("ws://" + location.host + "/test");
+    socket.onopen = function () {
+        const e = document.getElementsByClassName("box")[0];
+        let child = e.lastElementChild;
+        while (child) {
+            e.removeChild(child);
+            child = e.lastElementChild;
+        }
+    };
 
-    }
+    socket.onmessage = function (event) {
+        var box = document.getElementsByClassName("box")[0];
+        var parent = document.createElement("div");
+        parent.classList = "w3-container w3-border w3-round-large w3-margin parent";
+        const message = JSON.parse(event.data);
+        var name = document.createTextNode(message.name + '    ' + message.time);
+        var msg = document.createElement("h3");
+        msg.innerHTML = message.text;
+        parent.appendChild(name);
+        parent.appendChild(msg);
+        box.appendChild(parent);
+        box.scrollTo(0, box.scrollHeight);
 
-    if (window.location.protocol == "https:") {
-        var ws_scheme = "ws://";
-    } else {
-        var ws_scheme = "ws://"
-    }
 
-    var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/test");
+    };
+    document.addEventListener('keydown', function (event) {
+        if (event.keyCode === 13) {
+            const name = localStorage.getItem('name');
+            const text = document.getElementById('i1').value;
+            document.getElementById('i1').value = '';
+            const data = {
+                name: name,
+                text: text
+            };
+            socket.send(JSON.stringify(data));
+        }
+    });
 
+    setInterval(function () {
+        minAjax({
+            url: "http://" + location.host + "/clients",
+            type: "GET",
+            success: function (data) {
+                console.log(data);
+                const user_count = document.getElementsByClassName("user_count")[0];
+                user_count.innerHTML = data + " онлайн"
+            }
+        });
+    }, 5000);
+    setTimeout(function () {
+        sockett.send(JSON.stringify({system: true, limit: 100}))
+   }, 1000)
 </script>
+
 </body>
 </html>
