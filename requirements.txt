@@ -1,6 +1,6 @@
 cffi==1.13.2
 Click==7.0
-Flask==1.1.1
+Flask==2.3.2
 Flask-SocketIO==4.2.1
 Flask-Sockets==0.2.1
 gevent==1.4.0
